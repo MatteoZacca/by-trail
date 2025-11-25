@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const {User, Admin, Bivacco, Trail, Image, FavBivacco, FavTrail, Reservation, Setting, Notify } = require('./models');
+const {User, Admin, Bivacco, Trail, Image, FavBivacco, FavTrail, Reservation, Setting, Notify } = require('./server/src/models/models');
 
 const app = express();
 app.use(express.json());
