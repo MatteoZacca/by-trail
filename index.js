@@ -1,6 +1,6 @@
-require('dotenv').config()
 const express = require('express');
 const mongoose = require('mongoose');
+const fs = require('fs');
 
 const PORT = 3000;
 const {User, Admin, Bivacco, Trail, Image, FavBivacco, FavTrail, Reservation, Setting, Notify } = require('./server/src/models/models');
@@ -8,15 +8,33 @@ const {User, Admin, Bivacco, Trail, Image, FavBivacco, FavTrail, Reservation, Se
 const app = express();
 app.use(express.json());
 
-// Env var injected from Docker Compose
-const mongoURI =  process.env.MONGO_URI 
+// Helper to read the secret
+const getMongoURI = () => {
+    const withAtlas = process.env.USE_ATLAS === "true";
+    const secretPath = process.env.MONGO_URI_FILE;
 
-mongoose.connect(mongoURI)
-    .then(() => {
-        console.log('Connected to MongoDB Atlas via Mongoose');
-        // console.log("Database:", mongoose.connection.name);
-    })
-    .catch(error => console.error('Error connecting to MongoDB Atlas: ', error));
+    // Case 1: Docker with Secrets (Atlas)
+    if (secretPath && fs.existsSync(secretPath)) {
+        console.log("Loading URI from Docker Secret...");
+        return fs.readFileSync(secretPath, 'utf8').trim();
+    }
+
+    // Case 2: Fallback (Local Develop without Secrets or Local DB)
+    console.log("No Secret found, use local URI by default...");
+    return process.env.MONGO_URI_LOCAL; 
+};
+
+const connectDB = async () => {
+    const uri = getMongoURI();
+    try {
+        await mongoose.connect(uri);
+        console.log("Connected to MongoDB Atlas via Mongoose");
+    } catch (error) {
+        console.error("Error connecting to MongoDB Atlas:", error);
+    }
+};
+
+connectDB();
 
 app.listen(PORT, () => {
     console.log(`Server listening at: http://localhost:${PORT}/`);

@@ -1,6 +1,6 @@
 services:
 
-  # 1. Database 
+  # 1. Local Database
   mongo:
     image: mongo
     ports:
@@ -8,7 +8,7 @@ services:
     volumes:
       - mongo-data:/data/db # persist data, to insert real db path
 
-  # 2. Mongo Express GUI
+  # 2. Mongo Express GUI (optional for local DB)
   mongo-express:
     image: mongo-express
     restart: always
@@ -23,17 +23,27 @@ services:
   # 3. Backend (Node/Express)
   server:
     build:
-      context:  . 
+      context: . 
       dockerfile: ./server/Dockerfile
     ports:
       - "3000:3000"
+    secrets:
+      - db_uri
     environment:
-      MONGO_URI: mongodb://mongo:27017/by-trail
+      MONGO_URI_FILE: /run/secrets/db_uri
+      MONGO_URI_LOCAL: mongodb://mongo:27017/by-trail
+      # For using Local or Atlas
+      USE_ATLAS: "true" 
     volumes:
       - .:/app            # Syncronize local files with the container (Hot Reload)
-      - /app/node_modules # Avoid to override container's module
-    depends_on:
-      - mongo
+      - /app/node_modules
+    # Note: If use Atlas, not depending on Local container anymore
+    # depends_on: 
+    #   - mongo 
+
+secrets:
+  db_uri:
+    file: ./secrets/mongo_atlas_uri.txt
 
 volumes:
   mongo-data: # named volume to not lost data on turn off

@@ -2,10 +2,10 @@
 
 ## Setup and Run
 
-1. Install dependencies:
+1. Set up Docker secrets for MongoDB URI by creating a file named `mongo_atlas_uri.txt` in a directory named `secrets/` with the following content:
 
-   ```bash
-   npm install
+    ```text
+   mongodb+srv://<username>:<password>@cluster0.s5pavkk.mongodb.net/?appName=Cluster0    
    ```
 
 2. Start MongoDB server and Express application using Docker Compose:
@@ -14,10 +14,12 @@
     docker compose up -d
     ```
 
-3. Open a new terminal inside the project directory and run the Express server:
+3. Access:
+   - Local Database structure at [http://localhost:8081](http://localhost:8081).
+   - Main Application at [http://localhost:3000](http://localhost:3000).
 
-   ```bash
-   node .
-   ```
+4. To stop the services, run:
 
-4. Check the database structure with Mongo Express at [http://localhost:8081](http://localhost:8081).
+    ```bash
+    docker compose down
+    ```
