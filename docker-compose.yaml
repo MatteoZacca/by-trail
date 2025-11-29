@@ -22,9 +22,7 @@ services:
 
   # 3. Backend (Node/Express)
   server:
-    build:
-      context: . 
-      dockerfile: ./server/Dockerfile
+    build: ./server
     ports:
       - "3000:3000"
     secrets:
@@ -35,7 +33,7 @@ services:
       # For using Local or Atlas
       USE_ATLAS: "true" 
     volumes:
-      - .:/app            # Syncronize local files with the container (Hot Reload)
+      - ./server:/app            # Syncronize local files with the container (Hot Reload)
       - /app/node_modules
     # Note: If use Atlas, not depending on Local container anymore
     # depends_on: 

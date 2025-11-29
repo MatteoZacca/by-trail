@@ -1,12 +1,5 @@
-const express = require('express');
 const mongoose = require('mongoose');
 const fs = require('fs');
-
-const PORT = 3000;
-const {User, Admin, Bivacco, Trail, Image, FavBivacco, FavTrail, Reservation, Setting, Notify } = require('./server/src/models/models');
-
-const app = express();
-app.use(express.json());
 
 // Helper to read the secret
 const getMongoURI = () => {
@@ -34,12 +27,4 @@ const connectDB = async () => {
     }
 };
 
-connectDB();
-
-app.listen(PORT, () => {
-    console.log(`Server listening at: http://localhost:${PORT}/`);
-});
-
-app.get('/', (req, res) => {
-    res.send('Hello, World!');
-});
+module.exports = connectDB;
