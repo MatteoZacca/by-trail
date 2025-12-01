@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+
 const { Schema } = mongoose;
 
 /**************************************** Schemas ****************************************/
@@ -90,4 +91,4 @@ const Setting = mongoose.model('Setting', settingSchema);
 const Notify = mongoose.model('Notify', notifySchema);  
 
 
-module.exports = { User, Admin, Bivacco, Trail, Image, FavBivacco, FavTrail, Reservation, Setting, Notify };
+export { User, Admin, Bivacco, Trail, Image, FavBivacco, FavTrail, Reservation, Setting, Notify };
